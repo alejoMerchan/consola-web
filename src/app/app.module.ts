@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { SolicitudListComponent } from './solicitud-list/solicitud-list.component';
-import { SolicitudService } from './solicitud.service';
+
 
 @NgModule({
   declarations: [
@@ -17,7 +17,7 @@ import { SolicitudService } from './solicitud.service';
     FormsModule,
     HttpModule
   ],
-  providers: [SolicitudService],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }

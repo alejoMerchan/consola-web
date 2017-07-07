@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Solicitud } from '../solicitud';
 import { SolicitudService } from '../solicitud.service';
 
+import 'rxjs/operator/map'
+
 @Component({
   selector: 'app-solicitud-list',
   template: `
@@ -9,7 +11,9 @@ import { SolicitudService } from '../solicitud.service';
       <li *ngFor="let solicitud of solicitudes">
 
         <a href="#" (click)="selectSolicitud(solicitud)">
-          {{solicitud.numero}}
+
+        {{solicitud.fecha}}
+
         </a>
 
       </li>
@@ -20,6 +24,9 @@ import { SolicitudService } from '../solicitud.service';
       <h3>Estado</h3>
       <p>
         {{selectedSolicitud.estado}}
+        {{selectedSolicitud.numero}}
+        {{selectedSolicitud.fecha}}
+        {{selectedSolicitud.alcance}}
       </p>
     </section>
   `,
@@ -28,6 +35,7 @@ import { SolicitudService } from '../solicitud.service';
 export class SolicitudListComponent implements OnInit {
 
   solicitudes:Solicitud[];
+
   selectedSolicitud:Solicitud;
 
   constructor(private solicitudService: SolicitudService) {
@@ -35,7 +43,9 @@ export class SolicitudListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.solicitudes = this.solicitudService.getAll();
+
+      this.solicitudService.getAll().subscribe(s => this.solicitudes = s)
+
   }
 
   selectSolicitud(solicitud){

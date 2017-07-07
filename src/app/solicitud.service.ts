@@ -1,17 +1,52 @@
 import { Injectable } from '@angular/core';
+import { Http, Response, Headers } from '@angular/http';
+import { Observable } from 'rxjs/Rx';
 import { Solicitud } from './solicitud';
+
+
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+
 
 @Injectable()
 export class SolicitudService {
 
-  constructor() { }
+  private baseUrl: string = 'http://localhost:9420/ramo/080';
 
-  getAll():Solicitud[] {
-    return [
-    {numero:'0001', estado:'EXITOSA'},
-    {numero:'0002', estado:'FALLIDA'},
-    {numero:'0003', estado:'EXITOSA'},
-  ];
+  constructor(private http:Http) {
+
   }
+
+  getAll():Observable<Solicitud[]> {
+    let solicitudes$ = this.http
+    .get(`${this.baseUrl}/getSolicitudesFallidas`,{headers:this.getHeaders()})
+    .map(mapSolicitudes);
+    return solicitudes$;
+  }
+
+  private getHeaders(){
+    let headers = new Headers();
+    headers.append('Accept','application/json');
+    return headers;
+  }
+
+}
+
+function mapSolicitudes(response:Response): Solicitud[]{
+
+  return response.json().map(toSolicitud)
+}
+
+function toSolicitud(r:any):Solicitud{
+
+  console.log(r);
+  let solicitud = <Solicitud>({
+  estado:r.dsEstado,
+  numero:r.numeroSolicitud,
+  fecha:r.fechaTran,
+  alcance:r.alcance
+  });
+
+  return solicitud;
 
 }
